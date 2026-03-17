@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="BridgePattern">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/BreakIT/BridgePattern/com/es2/bridge/BridgePattern.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

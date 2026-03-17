@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Memento">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/BreakIT/Memento/Memento.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

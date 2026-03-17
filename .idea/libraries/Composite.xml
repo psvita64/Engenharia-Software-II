@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Composite">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/BreakIT/Composite/com.es2.composite/Composite.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

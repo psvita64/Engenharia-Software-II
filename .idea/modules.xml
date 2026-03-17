@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BreakIT/BreakIT.iml" filepath="$PROJECT_DIR$/BreakIT/BreakIT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BreakIT/Composite/Composite.iml" filepath="$PROJECT_DIR$/BreakIT/Composite/Composite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ESII-Projeto/ESII-Projeto.iml" filepath="$PROJECT_DIR$/ESII-Projeto/ESII-Projeto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Engenharia-Software-II.iml" filepath="$PROJECT_DIR$/Engenharia-Software-II.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Singleton">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/BreakIT/singleton/Singleton.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
