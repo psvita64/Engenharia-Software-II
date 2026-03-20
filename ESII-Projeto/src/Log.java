@@ -1,34 +1,35 @@
+import java.util.ArrayList;
+import java.util.List;
+
 // Abstração Base
 abstract class Log {
-    protected DestinoImplementador destino; // A "Ponte"
+    protected List<DestinoImplementador> destinos = new ArrayList<>();
 
-    protected Log(DestinoImplementador destino) {
-        this.destino = destino;
+    public void adicionarDestino(DestinoImplementador destino) {
+        this.destinos.add(destino);
     }
 
     public abstract void enviar(String mensagem);
 }
 
-// Abstração Refinada: Log de Sistema (Normal)
+// Abstração Refinada: Log de Sistema
 class LogSistema extends Log {
-    public LogSistema(DestinoImplementador destino) {
-        super(destino);
-    }
-
     @Override
     public void enviar(String mensagem) {
-        destino.gravarRegisto("LOG_SISTEMA: " + mensagem);
+        String mensagemFormatada = "LOG_SISTEMA: " + mensagem;
+        for (DestinoImplementador d : destinos) {
+            d.gravarRegisto(mensagemFormatada);
+        }
     }
 }
 
-// Abstração Refinada: Log de Alerta (Urgente)
+// Abstração Refinada: Log de Alerta
 class LogAlerta extends Log {
-    public LogAlerta(DestinoImplementador destino) {
-        super(destino);
-    }
-
     @Override
     public void enviar(String mensagem) {
-        destino.gravarRegisto("!!! ALERTA_URGENTE !!! -> " + mensagem.toUpperCase());
+        String mensagemFormatada = "!!! ALERTA_URGENTE !!! -> " + mensagem.toUpperCase();
+        for (DestinoImplementador d : destinos) {
+            d.gravarRegisto(mensagemFormatada);
+        }
     }
 }
