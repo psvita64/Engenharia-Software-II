@@ -1,18 +1,15 @@
-import java.util.HashSet;
-import java.util.Set;
-
 public class ConfiguracaoLog {
 
     private static ConfiguracaoLog instancia;
 
     // Definições do Sistema
     private String nivelAtivo;
-    private String formato;
+    private String formato; // "PADRAO" ou "FICHEIRO"
 
-    //Construtor
+    // Construtor Privado
     private ConfiguracaoLog() {
         this.nivelAtivo = "INFO";
-        this.formato = "PADRAO";
+        this.formato = "PADRAO"; // Valor inicial
     }
 
     public static synchronized ConfiguracaoLog getInstance() {
@@ -22,7 +19,12 @@ public class ConfiguracaoLog {
         return instancia;
     }
 
-    // Getters e Setters
+    // Getters e Setters para o Nível
     public String getNivelAtivo() { return nivelAtivo; }
     public void setNivelAtivo(String nivel) { this.nivelAtivo = nivel; }
+
+    // --- ADICIONA ISTO: Getters e Setters para o Formato ---
+    // Essencial para o M2 e M3 saberem onde gravar!
+    public String getFormato() { return formato; }
+    public void setFormato(String formato) { this.formato = formato; }
 }
