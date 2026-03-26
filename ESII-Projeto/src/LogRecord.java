@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 interface LogRecord {
     void emitir(String mensagem);
@@ -25,25 +25,35 @@ class WarningLog implements LogRecord {
     }
 }
 
-// A FÁBRICA
 class LogFactory {
-    private static final Map<String, Supplier<LogRecord>> registo = new HashMap<>();
+    // Mudamos para Function: ela recebe um Destino e entrega um Log
+    private static final Map<String, Function<DestinoImplementador, Log>> registo = new HashMap<>();
 
     static {
-        registo.put("INFO", InfoLog::new);
-        registo.put("ERROR", ErrorLog::new);
-        registo.put("WARNING", WarningLog::new);
+        // Agora passamos o destino para o construtor da classe
+        registo.put("SISTEMA", d -> new LogSistema(d));
+        registo.put("ALERTA", d -> new LogAlerta(d));
+        registo.put("INFO", d -> new LogSistema(d)); // Podes mapear os antigos para os novos
     }
 
-    public static void registarNovoTipo(String tipo, Supplier<LogRecord> construtor) {
-        registo.put(tipo.toUpperCase(), construtor);
-    }
+    public static Log criarLog(String tipo) {
+        ConfiguracaoLog config = ConfiguracaoLog.getInstance();
+        DestinoImplementador destino;
 
-    public static LogRecord criarLog(String tipo) {
-        Supplier<LogRecord> construtor = registo.get(tipo.toUpperCase());
-        if (construtor != null) {
-            return construtor.get();
+        // Escolha do Destino (M3)
+        if ("FICHEIRO".equalsIgnoreCase(config.getFormato())) {
+            destino = new DestinoFicheiro("log_geral.txt");
+        } else {
+            destino = new DestinoConsola();
         }
-        throw new IllegalArgumentException("Tipo de log desconhecido: " + tipo);
+
+        Function<DestinoImplementador, Log> construtor = registo.get(tipo.toUpperCase());
+
+        if (construtor != null) {
+            // Aqui passamos o destino "injetando-o" no log
+            return construtor.apply(destino);
+        }
+
+        return new LogSistema(destino);
     }
 }
