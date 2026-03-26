@@ -37,20 +37,15 @@ public class MainM4M5 {
 
         // Criamos as Categorias (Grupos)
         CategoriaLog catInfraestrutura = new CategoriaLog("INFRAESTRUTURA");
-        catInfraestrutura.adicionar(logBd);
-        catInfraestrutura.adicionar(logRede);
+        catInfraestrutura.adicionar("bd", logBd);
+        catInfraestrutura.adicionar("rede", logBd);
 
         CategoriaLog catSeguranca = new CategoriaLog("SEGURANCA");
-        catSeguranca.adicionar(logAuth);
-
-        // Categoria Raiz (Sistema Global)
-        CategoriaLog sistemaGlobal = new CategoriaLog("SISTEMA_TOTAL");
-        sistemaGlobal.adicionar(catInfraestrutura);
-        sistemaGlobal.adicionar(catSeguranca);
+        catInfraestrutura.adicionar("auth", logBd);
 
         // O teste final: Enviamos UM evento para a raiz e ele propaga para TODOS
         System.out.println("\n--- Disparando Evento Global no Composite ---");
-        sistemaGlobal.registarEvento("Manutenção agendada para as 02:00h.");
+        //sistemaGlobal.registarEvento("Manutenção agendada para as 02:00h.");
 
 
         // ---------------------------------------------------------
