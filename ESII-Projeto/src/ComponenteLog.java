@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 // 1. Component (A interface comum a ambos)
 interface ComponenteLog {
@@ -23,21 +22,33 @@ class LogFolha implements ComponenteLog {
 // 3. Composite (O Grupo / Categoria)
 class CategoriaLog implements ComponenteLog {
     private String nome;
-    private List<ComponenteLog> componentes = new ArrayList<>();
+    private Map<String, ComponenteLog> componentes = new HashMap<>();
 
     public CategoriaLog(String nome) {
         this.nome = nome;
     }
 
-    public void adicionar(ComponenteLog c) { componentes.add(c); }
-    public void remover(ComponenteLog c) { componentes.remove(c); }
+    public void adicionar(String chave, ComponenteLog componente) {
+        componentes.put(chave, componente);
+    }
+
+    public void remover(String chave) {
+        componentes.remove(chave);
+    }
+
+    public ComponenteLog obter(String chave) {
+        return componentes.get(chave);
+    }
 
     @Override
     public void registarEvento(String mensagem) {
         System.out.println("\n>>> Propagando para a Categoria: " + nome);
         // O "segredo" do Composite: um ciclo que chama todos os filhos!
-        for (ComponenteLog c : componentes) {
-            c.registarEvento("[" + nome + "] " + mensagem);
+        for (Map.Entry<String, ComponenteLog> entry : componentes.entrySet()) {
+            String chave = entry.getKey();
+            ComponenteLog componente = entry.getValue();
+
+            componente.registarEvento("[" + nome + " -> " + chave + "] " + mensagem);
         }
     }
 }

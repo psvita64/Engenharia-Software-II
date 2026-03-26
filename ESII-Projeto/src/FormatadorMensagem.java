@@ -22,6 +22,7 @@ class FormatadorMensagem {
 abstract class ObjectPool<T> {
     private Set<T> disponiveis = new HashSet<>();
     private Set<T> emUso = new HashSet<>();
+    private Integer maxSize = 10;
 
     protected abstract T criarObjeto();
 
@@ -29,10 +30,13 @@ abstract class ObjectPool<T> {
         if (disponiveis.isEmpty()) {
             disponiveis.add(criarObjeto());
         }
-        T objeto = disponiveis.iterator().next();
-        disponiveis.remove(objeto);
-        emUso.add(objeto);
-        return objeto;
+        if (emUso.size() < maxSize) {
+            T objeto = disponiveis.iterator().next();
+            disponiveis.remove(objeto);
+            emUso.add(objeto);
+            return objeto;
+        }
+        return null;
     }
 
     public synchronized void libertar(T objeto) {
