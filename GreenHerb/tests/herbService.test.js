@@ -16,6 +16,25 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     expect(result.errors.length).toBe(0);
   });
 
+  // --- TESTES DE CONDIÇÕES MÚLTIPLAS (CAIXA-BRANCA) ---
+  
+  test('Deve detetar múltiplos erros simultâneos (MCC)', () => {
+    const herb = {
+      name: '',            // Erro 1
+      temperature: 10,     // Erro 2
+      humidity: 90,        // Erro 3
+      luminosity: 1000     // Erro 4
+    };
+
+    const result = validateHerb(herb);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Nome da erva é obrigatório');
+    expect(result.errors).toContain('Temperatura fora do intervalo permitido');
+    expect(result.errors).toContain('Humidade fora do intervalo permitido');
+    expect(result.errors).toContain('Luminosidade fora do intervalo permitido');
+    expect(result.errors.length).toBe(4);
+  });
+
   // Nome vazio
   test('Deve rejeitar erva sem nome', () => {
     const herb = {
