@@ -22,6 +22,11 @@ const validateHerb = (herb) => {
     errors.push('Luminosidade fora do intervalo permitido');
   }
 
+  // No herbService.js, adiciona isto:
+if (!herb.cycleDays || herb.cycleDays < 1 || herb.cycleDays > 365) {
+  errors.push('Duração do ciclo fora do intervalo permitido');
+}
+
   return {valid: errors.length === 0, errors};
 };
 
