@@ -16,6 +16,49 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     expect(result.errors.length).toBe(0);
   });
 
+  describe('GREENHERB - Testes de Unidade - Autenticação', () => {
+
+  test('Deve validar formato de email correto', () => {
+    // Aqui testas a tua função validateEmail que está no app.js
+    expect(validateEmail('admin@greenherb.com')).toBe(true);
+  });
+
+  test('Deve rejeitar email sem @', () => {
+    expect(validateEmail('admin_at_greenherb.com')).toBe(false);
+  });
+
+  test('Deve rejeitar email com espaços', () => {
+    expect(validateEmail('admin @greenherb.com')).toBe(false);
+  });
+  
+  test('Deve rejeitar email vazio ou nulo', () => {
+    expect(validateEmail('')).toBe(false);
+    expect(validateEmail(null)).toBe(false);
+  });
+});
+
+// --- VALORES LIMITE: DURAÇÃO DO CICLO [1, 365] ---
+
+  test('Deve rejeitar duração de ciclo abaixo do limite (0)', () => {
+    const result = validateHerb({ name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, cycleDays: 0 });
+    expect(result.valid).toBe(false);
+  });
+
+  test('Deve aceitar duração de ciclo no limite mínimo (1)', () => {
+    const result = validateHerb({ name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, cycleDays: 1 });
+    expect(result.valid).toBe(true);
+  });
+
+  test('Deve aceitar duração de ciclo no limite máximo (365)', () => {
+    const result = validateHerb({ name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, cycleDays: 365 });
+    expect(result.valid).toBe(true);
+  });
+
+  test('Deve rejeitar duração de ciclo acima do limite (366)', () => {
+    const result = validateHerb({ name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, cycleDays: 366 });
+    expect(result.valid).toBe(false);
+  });
+  
   // --- TESTES DE CONDIÇÕES MÚLTIPLAS (CAIXA-BRANCA) ---
   
   test('Deve detetar múltiplos erros simultâneos (MCC)', () => {
