@@ -18,6 +18,36 @@ describe('GREENHERB - Testes de Unidade - Plan Service', () => {
     expect(result.valid).toBe(true);
   });
 
+
+  // --- VALORES LIMITE: JUSTIFICAÇÃO [10, 500] ---
+  test('Deve rejeitar justificação muito curta (9 caracteres)', () => {
+    const plan = { type: 'regular', temperature: 23, humidity: 60, luminosity: 15000, duration: 30, justification: 'abcde 123' };
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Justificação deve ter entre 10 e 500 caracteres');
+  });
+
+  test('Deve aceitar justificação no limite mínimo (10 caracteres)', () => {
+    const plan = { type: 'regular', temperature: 23, humidity: 60, luminosity: 15000, duration: 30, justification: 'Justifica!' };
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+  });
+
+  test('Deve aceitar justificação no limite máximo (500 caracteres)', () => {
+    const longText = 'a'.repeat(500);
+    const plan = { type: 'regular', temperature: 23, humidity: 60, luminosity: 15000, duration: 30, justification: longText };
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+  });
+
+  test('Deve rejeitar justificação acima do limite (501 caracteres)', () => {
+    const tooLong = 'a'.repeat(501);
+    const plan = { type: 'regular', temperature: 23, humidity: 60, luminosity: 15000, duration: 30, justification: tooLong };
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Justificação deve ter entre 10 e 500 caracteres');
+  });
+
   // --- TESTES DE VALORES LIMITE (6.1.2) ---
 
   // Temperatura [18, 28]

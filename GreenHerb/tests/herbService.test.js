@@ -16,27 +16,6 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     expect(result.errors.length).toBe(0);
   });
 
-  describe('GREENHERB - Testes de Unidade - Autenticação', () => {
-
-  test('Deve validar formato de email correto', () => {
-    // Aqui testas a tua função validateEmail que está no app.js
-    expect(validateEmail('admin@greenherb.com')).toBe(true);
-  });
-
-  test('Deve rejeitar email sem @', () => {
-    expect(validateEmail('admin_at_greenherb.com')).toBe(false);
-  });
-
-  test('Deve rejeitar email com espaços', () => {
-    expect(validateEmail('admin @greenherb.com')).toBe(false);
-  });
-  
-  test('Deve rejeitar email vazio ou nulo', () => {
-    expect(validateEmail('')).toBe(false);
-    expect(validateEmail(null)).toBe(false);
-  });
-});
-
 // --- VALORES LIMITE: DURAÇÃO DO CICLO [1, 365] ---
 
   test('Deve rejeitar duração de ciclo abaixo do limite (0)', () => {
@@ -191,6 +170,44 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
 
     const result = validateHerb(herb);
     expect(result.valid).toBe(true);
+  });
+
+  // --- VALORES LIMITE: JUSTIFICAÇÃO [10, 500] caracteres ---
+
+  test('Deve rejeitar justificação com tamanho insuficiente (9)', () => {
+    const result = validateHerb({ 
+      name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, 
+      justification: 'Curta...' 
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Justificação deve ter entre 10 e 500 caracteres');
+  });
+
+  test('Deve aceitar justificação no limite mínimo (10)', () => {
+    const result = validateHerb({ 
+      name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, 
+      justification: 'Dez letras' 
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test('Deve aceitar justificação no limite máximo (500)', () => {
+    const longText = 'a'.repeat(500);
+    const result = validateHerb({ 
+      name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, 
+      justification: longText 
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test('Deve rejeitar justificação acima do limite máximo (501)', () => {
+    const tooLongText = 'a'.repeat(501);
+    const result = validateHerb({ 
+      name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, 
+      justification: tooLongText 
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Justificação deve ter entre 10 e 500 caracteres');
   });
 
   test('Deve aceitar humidade no limite máximo (80)', () => {

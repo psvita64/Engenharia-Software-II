@@ -14,6 +14,13 @@ const validatePlan = (plan) => {
     errors.push('Tipo de plano inválido');
   }
 
+  // Adiciona isto dentro da função validatePlan
+if (plan.justification) {
+  if (plan.justification.length < 10 || plan.justification.length > 500) {
+    errors.push('Justificação deve ter entre 10 e 500 caracteres');
+  }
+}
+
   // Temperatura
   if (plan.temperature < 18 || plan.temperature > 28){
     errors.push(
