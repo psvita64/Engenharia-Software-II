@@ -1,10 +1,17 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-
 const app = express();
+const herbRoutes = require('./routes/herbRoutes');
+const planRoutes = require('./routes/planRoutes');
 
-app.use(express.json());
+app.use(express.json()); 
+
+// Registo das rotas
+app.use('/herbs', herbRoutes);
+app.use('/plans', planRoutes);
+
+module.exports = app;
 
 const SECRET_KEY = "greenherb_secret";
 
