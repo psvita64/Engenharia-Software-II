@@ -5,8 +5,7 @@ const upload = multer({ dest: 'uploads/' });
 const { validateHerb } = require('../services/herbService');
 const fs = require('fs');
 
-// AGORA o router já está definido e podes usar:
-router.post('/import', upload.single('file'), (req, res) => {
+ router.post('/import', upload.single('file'), (req, res) => {
    try {
      if (!req.file) return res.status(400).json({ error: 'Nenhum ficheiro enviado' });
 
