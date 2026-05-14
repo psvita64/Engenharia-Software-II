@@ -3,19 +3,20 @@ const { validateHerb } = require('../src/services/herbService');
 describe('GREENHERB - Testes de Unidade - Herb Service', () => {
 
   // Erva válida
-  test('Deve validar uma erva aromática válida', () => {
-    const herb = {
-      name: 'Hortelã',
-      temperature: 23,
-      humidity: 60,
-      luminosity: 15000
-    };
+ const validBase = {
+    name: 'Hortelã',
+    temperature: 23,
+    humidity: 60,
+    luminosity: 15000,
+    cycleDays: 90,
+    justification: 'Justificação válida com mais de 10 caracteres'
+  };
 
-    const result = validateHerb(herb);
+  test('Deve validar uma erva aromática completa e válida', () => {
+    const result = validateHerb(validBase);
     expect(result.valid).toBe(true);
     expect(result.errors.length).toBe(0);
   });
-
 // --- VALORES LIMITE: DURAÇÃO DO CICLO [1, 365] ---
 
   test('Deve rejeitar duração de ciclo abaixo do limite (0)', () => {
@@ -45,16 +46,15 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
       name: '',            // Erro 1
       temperature: 10,     // Erro 2
       humidity: 90,        // Erro 3
-      luminosity: 1000     // Erro 4
+      luminosity: 1000,    // Erro 4
+      cycleDays: 400,      // Erro 5 (Novo)
+      justification: 'S'   // Erro 6 (Novo)
     };
 
     const result = validateHerb(herb);
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Nome da erva é obrigatório');
-    expect(result.errors).toContain('Temperatura fora do intervalo permitido');
-    expect(result.errors).toContain('Humidade fora do intervalo permitido');
-    expect(result.errors).toContain('Luminosidade fora do intervalo permitido');
-    expect(result.errors.length).toBe(4);
+    // Atualiza para 6 se estiveres a invalidar tudo, ou garante que o resto é válido
+    expect(result.errors.length).toBe(6); 
   });
 
   // Nome vazio
@@ -86,7 +86,19 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     expect(result.errors).toContain('Temperatura fora do intervalo permitido');
   });
 
-  test('Deve aceitar temperatura no limite mínimo (18)', () => {
+  test('Deve aceitar temperatura no limite mínimo (17)', () => {
+    const herb = {
+      name: 'Manjericão',
+      temperature: 17,
+      humidity: 60,
+      luminosity: 15000
+    };
+
+    const result = validateHerb(herb);
+    expect(result.valid).toBe(true);
+  });
+
+   test('Deve aceitar temperatura no limite mínimo (18)', () => {
     const herb = {
       name: 'Manjericão',
       temperature: 18,

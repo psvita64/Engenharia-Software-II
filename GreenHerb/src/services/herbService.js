@@ -1,42 +1,26 @@
 const validateHerb = (herb) => {
-
   const errors = [];
 
-  // Nome obrigatório
-  if (!herb.name || herb.name.trim() === ''){
-    errors.push('Nome da erva é obrigatório');
+  // Validações existentes (Nome, Temp, Hum, Luz)
+  if (!herb.name || herb.name.trim() === '') errors.push('Nome da erva é obrigatório');
+  if (herb.temperature < 18 || herb.temperature > 28) errors.push('Temperatura fora do intervalo permitido');
+  if (herb.humidity < 40 || herb.humidity > 80) errors.push('Humidade fora do intervalo permitido');
+  if (herb.luminosity < 5000 || herb.luminosity > 25000) errors.push('Luminosidade fora do intervalo permitido');
+
+  // NOVO: Duração do ciclo (dias) [1, 365]
+  if (herb.cycleDays === undefined || herb.cycleDays < 1 || herb.cycleDays > 365) {
+    errors.push('Duração do ciclo fora do intervalo permitido');
   }
 
-  // Temperatura
-  if (herb.temperature < 18 || herb.temperature > 28){
-    errors.push('Temperatura fora do intervalo permitido');
-  }
-
-  // No teu herbService.js
-if (herb.justification) {
-  if (herb.justification.length < 10 || herb.justification.length > 500) {
+  // Nota: Verificamos o comprimento da string
+  if (!herb.justification || herb.justification.length < 10 || herb.justification.length > 500) {
     errors.push('Justificação deve ter entre 10 e 500 caracteres');
   }
-}
 
-  // Humidade
-  if (herb.humidity < 40 || herb.humidity > 80){
-    errors.push('Humidade fora do intervalo permitido');
-  }
-
-  // Luminosidade
-  if (herb.luminosity < 5000 || herb.luminosity > 25000){
-    errors.push('Luminosidade fora do intervalo permitido');
-  }
-
-  // No herbService.js, adiciona isto:
-if (!herb.cycleDays || herb.cycleDays < 1 || herb.cycleDays > 365) {
-  errors.push('Duração do ciclo fora do intervalo permitido');
-}
-
-  return {valid: errors.length === 0, errors};
+  return {
+    valid: errors.length === 0,
+    errors
+  };
 };
 
-module.exports = {
-  validateHerb
-};
+module.exports = { validateHerb };
