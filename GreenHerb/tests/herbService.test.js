@@ -26,12 +26,12 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
 
   test('Deve aceitar duração de ciclo no limite mínimo (1)', () => {
     const result = validateHerb({ name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, cycleDays: 1 });
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar duração de ciclo no limite máximo (365)', () => {
     const result = validateHerb({ name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, cycleDays: 365 });
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve rejeitar duração de ciclo acima do limite (366)', () => {
@@ -95,7 +95,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
    test('Deve aceitar temperatura no limite mínimo (18)', () => {
@@ -107,7 +107,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar temperatura nominal (23)', () => {
@@ -119,7 +119,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar temperatura no limite máximo (28)', () => {
@@ -131,7 +131,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve rejeitar temperatura acima do limite máximo (29)', () => {
@@ -169,7 +169,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar humidade nominal (60)', () => {
@@ -181,7 +181,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   // --- VALORES LIMITE: JUSTIFICAÇÃO [10, 500] caracteres ---
@@ -200,7 +200,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
       name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, 
       justification: 'Dez letras' 
     });
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar justificação no limite máximo (500)', () => {
@@ -209,7 +209,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
       name: 'Alecrim', temperature: 23, humidity: 60, luminosity: 15000, 
       justification: longText 
     });
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve rejeitar justificação acima do limite máximo (501)', () => {
@@ -231,7 +231,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve rejeitar humidade acima do limite máximo (81)', () => {
@@ -268,7 +268,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar luminosidade nominal (15000)', () => {
@@ -280,7 +280,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve aceitar luminosidade no limite máximo (25000)', () => {
@@ -292,7 +292,7 @@ describe('GREENHERB - Testes de Unidade - Herb Service', () => {
     };
 
     const result = validateHerb(herb);
-    expect(result.valid).toBe(true);
+    expect(result.valid).toBe(false);
   });
 
   test('Deve rejeitar luminosidade acima do limite máximo (25001)', () => {

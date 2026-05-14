@@ -7,10 +7,14 @@ describe('GREENHERB - Testes de Integração - Importação CSV', () => {
   const testFilePath = path.join(__dirname, 'test_catalogo.csv');
 
   // Criar um ficheiro de teste antes de começar
-  beforeAll(() => {
-    const csvContent = 'Manjericão,25,60,15000,90\nAlecrim,23,40,18000,120';
-    fs.writeFileSync(testFilePath, csvContent);
-  });
+  // Dentro do teu describe de integração
+beforeAll(() => {
+  // CORREÇÃO: Adicionar Ciclo (90) e Justificação (texto longo) a cada linha
+  const csvContent = 
+    'Manjericão,25,60,15000,90,Justificacao valida para importacao\n' +
+    'Alecrim,23,40,18000,120,Segunda justificacao obrigatoria';
+  fs.writeFileSync(testFilePath, csvContent);
+});
 
   // Apagar o ficheiro depois dos testes
   afterAll(() => {
