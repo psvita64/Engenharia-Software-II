@@ -12,6 +12,13 @@ const validateHerb = (herb) => {
     errors.push('Temperatura fora do intervalo permitido');
   }
 
+  // No teu herbService.js
+if (herb.justification) {
+  if (herb.justification.length < 10 || herb.justification.length > 500) {
+    errors.push('Justificação deve ter entre 10 e 500 caracteres');
+  }
+}
+
   // Humidade
   if (herb.humidity < 40 || herb.humidity > 80){
     errors.push('Humidade fora do intervalo permitido');
