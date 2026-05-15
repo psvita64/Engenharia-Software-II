@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Importa a tua app Express global
-const { validateTask } = require('../services/taskService');
+const { validateTask } = require('../src/services/taskService');
 
 /* ==========================================================================
    1. TESTES DE UNIDADE (Nível 1) - Validação Lógica Isolada
@@ -90,11 +90,11 @@ describe('GREENHERB - Testes de Unidade: Validação de Tarefas', () => {
 /* ==========================================================================
    2. TESTES DE INTEGRAÇÃO (Nível 2) - Contratos da Rota HTTP
    ========================================================================= */
-describe('GREENHERB - Testes de Integração: Rota POST /api/tasks', () => {
+describe('GREENHERB - Testes de Integração: Rota POST /tasks', () => {
 
-  test('POST /api/tasks -> Deve responder 201 Created quando o payload estrutural for válido', async () => {
+  test('POST /tasks -> Deve responder 201 Created quando o payload estrutural for válido', async () => {
     const response = await request(app)
-      .post('/api/tasks')
+      .post('/tasks')
       .send({
         title: 'Colheita Lote Hortelã',
         batchId: 45,
@@ -108,9 +108,9 @@ describe('GREENHERB - Testes de Integração: Rota POST /api/tasks', () => {
     expect(response.body).toHaveProperty('task');
   });
 
-  test('POST /api/tasks -> Deve responder 400 Bad Request se falhar nos parâmetros estruturais', async () => {
+  test('POST /tasks -> Deve responder 400 Bad Request se falhar nos parâmetros estruturais', async () => {
     const response = await request(app)
-      .post('/api/tasks')
+      .post('/tasks')
       .send({
         title: '',
         batchId: null,
@@ -134,7 +134,7 @@ describe('GREENHERB - Testes de Sistema: Fluxo de Atribuição Operacional', () 
     
     // Passo 1: O Gestor cria a tarefa no sistema planeando o trabalho técnico (Status: pendente)
     const agendamento = await request(app)
-      .post('/api/tasks')
+      .post('/tasks')
       .send({
         title: 'Calibração do sensor EC Lote 2',
         batchId: 12,
@@ -149,7 +149,7 @@ describe('GREENHERB - Testes de Sistema: Fluxo de Atribuição Operacional', () 
     // Passo 2: O Técnico chega à estufa, aceita o encargo e inicia a atividade física
     // O sistema regista o pipeline com a transição de estado na app
     const inícioTrabalho = await request(app)
-      .post('/api/tasks')
+      .post('/tasks')
       .send({
         title: 'Calibração do sensor EC Lote 2',
         batchId: 12,

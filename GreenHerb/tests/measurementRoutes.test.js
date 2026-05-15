@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Importa a tua app Express global
-const { validateMeasurement } = require('../services/measurementService');
+const { validateMeasurement } = require('../src/services/measurementService');
 
 /* ==========================================================================
    1. TESTES DE UNIDADE (Nível 1) - Validação Lógica Isolada
@@ -83,11 +83,11 @@ describe('GREENHERB - Testes de Unidade: Validação de Medições', () => {
 /* ==========================================================================
    2. TESTES DE INTEGRAÇÃO (Nível 2) - Contratos da Rota HTTP
    ========================================================================= */
-describe('GREENHERB - Testes de Integração: Rota POST /api/measurements', () => {
+describe('GREENHERB - Testes de Integração: Rota POST /measurements', () => {
 
-  test('POST /api/measurements -> Deve responder 201 Created quando o payload estrutural for válido', async () => {
+  test('POST /measurements -> Deve responder 201 Created quando o payload estrutural for válido', async () => {
     const response = await request(app)
-      .post('/api/measurements')
+      .post('/measurements')
       .send({
         sensorId: 'SNS-LUX-04',
         type: 'luminosidade',
@@ -101,9 +101,9 @@ describe('GREENHERB - Testes de Integração: Rota POST /api/measurements', () =
     expect(response.body).toHaveProperty('measurement');
   });
 
-  test('POST /api/measurements -> Deve responder 400 Bad Request se houver falha de dados', async () => {
+  test('POST /measurements -> Deve responder 400 Bad Request se houver falha de dados', async () => {
     const response = await request(app)
-      .post('/api/measurements')
+      .post('/measurements')
       .send({
         sensorId: '',
         type: 'co2',
@@ -128,7 +128,7 @@ describe('GREENHERB - Testes de Sistema: Fluxo Contínuo de Telemetria E2E', () 
 
     // Passo 1: O Sensor envia a primeira medição de rotina (ex: Temperatura às 14:30)
     const leitura1 = await request(app)
-      .post('/api/measurements')
+      .post('/measurements')
       .send({
         sensorId: 'ESTUFA-NODE-01',
         type: 'temperatura',
@@ -145,7 +145,7 @@ describe('GREENHERB - Testes de Sistema: Fluxo Contínuo de Telemetria E2E', () 
     timestampBase.setMinutes(timestampBase.getMinutes() + 5);
 
     const leitura2 = await request(app)
-      .post('/api/measurements')
+      .post('/measurements')
       .send({
         sensorId: 'ESTUFA-NODE-01',
         type: 'temperatura',

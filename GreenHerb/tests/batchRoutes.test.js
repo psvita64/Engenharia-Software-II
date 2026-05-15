@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Importa a tua app Express global
-const { validateBatch } = require('../services/batchService');
+const { validateBatch } = require('../src/services/batchService');
 
 /* ==========================================================================
    1. TESTES DE UNIDADE (Nível 1) - Validação Lógica Isolada
@@ -93,11 +93,11 @@ describe('GREENHERB - Testes de Unidade: Validação de Lotes', () => {
 /* ==========================================================================
    2. TESTES DE INTEGRAÇÃO (Nível 2) - Contratos da Rota HTTP
    ========================================================================== */
-describe('GREENHERB - Testes de Integração: Rota POST /api/batches', () => {
+describe('GREENHERB - Testes de Integração: Rota POST /batches', () => {
 
-  test('POST /api/batches -> Deve responder 201 Created quando o payload estrutural for válido', async () => {
+  test('POST /batches -> Deve responder 201 Created quando o payload estrutural for válido', async () => {
     const response = await request(app)
-      .post('/api/batches')
+      .post('/batches')
       .send({
         name: 'Lote Estufa Sul',
         crop: 'Coentros',
@@ -111,9 +111,9 @@ describe('GREENHERB - Testes de Integração: Rota POST /api/batches', () => {
     expect(response.body).toHaveProperty('batch');
   });
 
-  test('POST /api/batches -> Deve responder 400 Bad Request se falhar nas regras de negócio', async () => {
+  test('POST /batches -> Deve responder 400 Bad Request se falhar nas regras de negócio', async () => {
     const response = await request(app)
-      .post('/api/batches')
+      .post('/batches')
       .send({
         name: '',
         crop: 'Tomilho',
@@ -137,7 +137,7 @@ describe('GREENHERB - Testes de Sistema: Ciclo de Vida Operacional do Lote', () 
     
     // Passo 1: O Responsável Agrícola cria o planeamento do lote (Status: planejado)
     const fasePlaneamento = await request(app)
-      .post('/api/batches')
+      .post('/batches')
       .send({
         name: 'Lote Hidropónico 4',
         crop: 'Salsa frisada',
@@ -151,7 +151,7 @@ describe('GREENHERB - Testes de Sistema: Ciclo de Vida Operacional do Lote', () 
 
     // Passo 2: Chega o dia do cultivo. O Operador inicia o lote na estufa alterando o estado do ciclo de vida
     const faseExecucao = await request(app)
-      .post('/api/batches')
+      .post('/batches')
       .send({
         name: 'Lote Hidropónico 4',
         crop: 'Salsa frisada',

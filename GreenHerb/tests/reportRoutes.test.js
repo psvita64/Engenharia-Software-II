@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Importa a tua app Express global
-const { validateReportRequest } = require('../services/reportService');
+const { validateReportRequest } = require('../src/services/reportService');
 
 /* ==========================================================================
    1. TESTES DE UNIDADE (Nível 1) - Validação Lógica Isolada
@@ -72,11 +72,11 @@ describe('GREENHERB - Testes de Unidade: Validação de Pedidos de Relatório', 
 /* ==========================================================================
    2. TESTES DE INTEGRAÇÃO (Nível 2) - Contratos da Rota HTTP
    ========================================================================= */
-describe('GREENHERB - Testes de Integração: Rota POST /api/reports', () => {
+describe('GREENHERB - Testes de Integração: Rota POST /reports', () => {
 
-  test('POST /api/reports -> Deve responder 200 OK e devolver o sumário se o payload for válido', async () => {
+  test('POST /reports -> Deve responder 200 OK e devolver o sumário se o payload for válido', async () => {
     const response = await request(app)
-      .post('/api/reports')
+      .post('/reports')
       .send({
         type: 'daily',
         from: '2026-05-15T00:00:00.000Z',
@@ -88,9 +88,9 @@ describe('GREENHERB - Testes de Integração: Rota POST /api/reports', () => {
     expect(response.body.report).toHaveProperty('summary');
   });
 
-  test('POST /api/reports -> Deve responder 400 Bad Request se falhar nos parâmetros estruturais', async () => {
+  test('POST /reports -> Deve responder 400 Bad Request se falhar nos parâmetros estruturais', async () => {
     const response = await request(app)
-      .post('/api/reports')
+      .post('/reports')
       .send({
         type: 'invalid_type',
         from: null,
@@ -112,7 +112,7 @@ describe('GREENHERB - Testes de Sistema: Pipeline de Auditoria de Relatórios', 
     
     // Passo 1: O Gestor da estufa gera um relatório diário para analisar o fecho do dia
     const relatorioDia = await request(app)
-      .post('/api/reports')
+      .post('/reports')
       .send({
         type: 'daily',
         from: '2026-05-14T00:00:00.000Z',
@@ -124,7 +124,7 @@ describe('GREENHERB - Testes de Sistema: Pipeline de Auditoria de Relatórios', 
 
     // Passo 2: De seguida, expande o foco e pede um histórico customizado mais abrangente
     const relatorioCustom = await request(app)
-      .post('/api/reports')
+      .post('/reports')
       .send({
         type: 'custom',
         from: '2026-01-01T00:00:00.000Z',

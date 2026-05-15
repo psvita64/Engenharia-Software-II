@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/app'); // Importa a tua app Express global
-const { validateAutomationRule } = require('../services/automationService');
+const { validateAutomationRule } = require('../src/services/automationService');
 
 /* ==========================================================================
    1. TESTES DE UNIDADE (Nível 1) - Validação Lógica Isolada
@@ -83,7 +83,7 @@ describe('GREENHERB - Testes de Integração: Rota POST /api/automation', () => 
 
   test('POST /api/automation -> Deve responder 201 se o JSON estrutural for válido', async () => {
     const response = await request(app)
-      .post('/api/automation')
+      .post('/automation')
       .send({
         trigger: { type: 'LIGHT_LOW' },
         action: { type: 'TURN_ON_LED' },
@@ -97,7 +97,7 @@ describe('GREENHERB - Testes de Integração: Rota POST /api/automation', () => 
 
   test('POST /api/automation -> Deve responder 400 se as validações estruturais falharem', async () => {
     const response = await request(app)
-      .post('/api/automation')
+      .post('/automation')
       .send({
         trigger: null,
         action: null,
@@ -119,7 +119,7 @@ describe('GREENHERB - Testes de Sistema: Fluxo de Ciclo de Vida da Automação',
     
     // Passo 1: O Operador cria uma nova regra automática de emergência para a rega
     const criarRegra = await request(app)
-      .post('/api/automation')
+      .post('/automation')
       .send({
         trigger: { type: 'HUMIDITY_CRITICAL_LOW' },
         action: { type: 'START_WATER_PUMP' },
@@ -132,7 +132,7 @@ describe('GREENHERB - Testes de Sistema: Fluxo de Ciclo de Vida da Automação',
     // Passo 2: O Operador decide reconfigurar a estufa e desativa temporariamente a regra criada
     // Simulamos a alteração de estado no pipeline operacional do sistema
     const desativarRegra = await request(app)
-      .post('/api/automation')
+      .post('/automation')
       .send({
         trigger: { type: 'HUMIDITY_CRITICAL_LOW' },
         action: { type: 'START_WATER_PUMP' },
