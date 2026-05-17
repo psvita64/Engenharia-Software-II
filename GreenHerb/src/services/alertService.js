@@ -1,17 +1,80 @@
 const classifyAlert = (temp, hum, limits, sensorOK) => {
-  const tempFora = temp < limits.minT || temp > limits.maxT;
-  // CORRIGIDO: Era ":" e agora é ">"
-  const humFora = hum < limits.minH || hum > limits.maxH;
 
-  // CORRIGIDO: Era "humBase" e agora é "humFora"
-  if ((tempFora || humFora) && sensorOK) {
-    if (temp > limits.maxT + 5 || hum < limits.minH - 20) return 'Crítico';
-    return 'Aviso';
+  const errors = [];
+
+  if (!limits) {
+
+    errors.push(
+      'Limites não definidos'
+    );
+
+  }
+
+  if (
+    sensorOK === undefined ||
+    typeof sensorOK !== 'boolean'
+  ) {
+
+    errors.push(
+      'Estado do sensor inválido'
+    );
+
+  }
+
+  if (errors.length > 0) {
+
+    return {
+      valid: false,
+      errors
+    };
+
+  }
+
+  const temperatureOutsideLimits =
+    temp < limits.minT ||
+    temp > limits.maxT;
+
+  const humidityOutsideLimits =
+    hum < limits.minH ||
+    hum > limits.maxH;
+
+  if (!sensorOK) {
+
+    return {
+      valid: true,
+      severity: 'Informativo'
+    };
+
+  }
+
+  if (
+    temperatureOutsideLimits ||
+    humidityOutsideLimits
+  ) {
+
+    if (
+      temp > limits.maxT + 5 ||
+      hum < limits.minH - 20
+    ) {
+
+      return {
+        valid: true,
+        severity: 'Crítico'
+      };
+
+    }
+
+    return {
+      valid: true,
+      severity: 'Aviso'
+    };
+
   }
   
-  if (!sensorOK) return 'Informativo';
-  
-  return 'Normal';
+  return {
+    valid: true,
+    severity: 'Normal'
+  };
 };
 
 module.exports = { classifyAlert };

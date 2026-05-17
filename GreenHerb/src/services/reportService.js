@@ -1,20 +1,23 @@
 const validateReportRequest = (report) => {
   const errors = [];
-  const validTypes = ['daily', 'weekly', 'monthly', 'custom'];
+  const VALID_REPORT_TYPES = ['daily', 'weekly', 'monthly', 'custom'];
 
-  if (!report.type || !validTypes.includes(report.type)) {
+  if (!report.type || !VALID_REPORT_TYPES.includes(report.type)) {
     errors.push('Tipo de relatório inválido');
   }
 
-  if (!report.from || isNaN(Date.parse(report.from))) {
+  if (!report.from || typeof report.from !== 'string' || isNaN(Date.parse(report.from))) {
     errors.push('Data inicial inválida');
   }
 
-  if (!report.to || isNaN(Date.parse(report.to))) {
+  if (!report.to || typeof report.to !== 'string' || isNaN(Date.parse(report.to))) {
     errors.push('Data final inválida');
   }
 
-  if (report.from && report.to && Date.parse(report.from) > Date.parse(report.to)) {
+  const fromDate = Date.parse(report.from);
+  const toDate = Date.parse(report.to);
+
+  if (!isNaN(fromDate) && !isNaN(toDate) && fromDate > toDate) {
     errors.push('Intervalo de datas inválido');
   }
 
