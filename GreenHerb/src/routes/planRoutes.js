@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const { validatePlan } = require('../services/planService');
@@ -14,10 +13,9 @@ router.post('/', (req, res) => {
     });
   }
 
-  // Aqui simularias o salvamento na base de dados
-  res.status(201).json({ 
+  return res.status(201).json({ 
     message: 'Plano de cultivo criado com sucesso!',
-    plan: planData 
+    planData
   });
 });
 

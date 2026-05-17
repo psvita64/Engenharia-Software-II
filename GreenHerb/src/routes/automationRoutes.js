@@ -10,7 +10,7 @@ router.post('/', (req, res) => {
     return res.status(400).json({ error: 'Regra de automação inválida', details: validation.errors });
   }
 
-  res.status(201).json({ message: 'Regra de automação criada com sucesso!', rule });
+  return res.status(201).json({ message: 'Regra de automação criada com sucesso!', rule });
 });
 
 module.exports = router;

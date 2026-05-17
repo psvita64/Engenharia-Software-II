@@ -7,16 +7,10 @@ router.post('/', (req, res) => {
   const validation = validateAuditEntry(auditEntry);
 
   if (!validation.valid) {
-    return res.status(400).json({ 
-      error: 'Entrada de auditoria inválida', 
-      details: validation.errors 
-    });
+    return res.status(400).json({ error: 'Entrada de auditoria inválida', details: validation.errors });
   }
 
-  res.status(201).json({ 
-    message: 'Entrada de auditoria registada com sucesso', 
-    auditEntry 
-  });
+  return res.status(201).json({ message: 'Entrada de auditoria registada com sucesso', auditEntry });
 });
 
 module.exports = router;
