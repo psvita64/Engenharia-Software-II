@@ -431,3 +431,220 @@ describe('GREENHERB - Unit Tests - Plan Service', () => {
   });
 
 });
+
+describe('Sprint 5 - Testes White-box: Validação de Plano Pontual', () => {
+
+  // LINHA 1 DA TABELA: Tipo não é pontual, sem autorização (Deve aceitar se os limites estiverem OK)
+  test('Linha 1: Deve aceitar plano regular mesmo sem autorização explícita', () => {
+    const plan = {
+      type: 'regular',
+      temperature: 22,
+      humidity: 60,
+      luminosity: 15000,
+      duration: 30,
+      authorizedByResponsible: false
+    };
+
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+    expect(result.errors).not.toContain('Plano pontual exige autorização');
+  });
+
+  // LINHA 3 DA TABELA: Tipo é pontual, SEM autorização (Deve falhar/rejeitar)
+  test('Linha 3: Deve rejeitar plano pontual se não houver autorização do Responsável Técnico', () => {
+    const plan = {
+      type: 'pontual',
+      temperature: 22,
+      humidity: 60,
+      luminosity: 15000,
+      duration: 30,
+      authorizedByResponsible: false // C3: A=Verdadeiro, B=Falso -> Entra no IF
+    };
+
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Plano pontual exige autorização');
+  });
+
+  // LINHA 4 DA TABELA: Tipo é pontual, COM autorização (Deve aceitar)
+  test('Linha 4: Deve aprovar plano pontual quando devidamente autorizado pelo Responsável', () => {
+    const plan = {
+      type: 'pontual',
+      temperature: 22,
+      humidity: 60,
+      luminosity: 15000,
+      duration: 30,
+      authorizedByResponsible: true // C4: A=Verdadeiro, B=Verdadeiro -> Ignora o IF
+    };
+
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+});
+const { validatePlan } = require('./planService'); // Ajusta o caminho se necessário
+
+describe('Sprint 5 - Suite de Testes White-Box Absoluta (validatePlan)', () => {
+
+  // Fábrica de planos válidos para isolamento de variáveis
+  const createValidBasePlan = () => ({
+    type: 'regular',
+    temperature: 22,
+    humidity: 60,
+    luminosity: 15000,
+    duration: 30,
+    authorizedByResponsible: false
+  });
+
+  // =========================================================================
+  // TESTES DA DECISÃO: PLANO PONTUAL E AUTORIZAÇÃO (&&)
+  // =========================================================================
+
+  test('TU-WB-01 (Linha L1 da Tabela): Tipo regular (C1=F) e Sem Autorização (C2=F) -> Não deve dar erro', () => {
+    const plan = createValidBasePlan();
+    // C1 = Falso ('regular' !== 'pontual')
+    // C2 = Falso (authorizedByResponsible: false)
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+    expect(result.errors).not.toContain('Plano pontual exige autorização');
+  });
+
+  test('TU-WB-02 (Linha L2 da Tabela): Tipo regular (C1=F) e Com Autorização (C2=V) -> Não deve dar erro', () => {
+    const plan = createValidBasePlan();
+    plan.type = 'emergencia'; // C1 = Falso
+    plan.authorizedByResponsible = true; // C2 = Verdadeiro
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+    expect(result.errors).not.toContain('Plano pontual exige autorização');
+  });
+
+  test('TU-WB-03 (Linha L3 da Tabela): Tipo pontual (C1=V) e Sem Autorização (C2=F) -> DEVE REJEITAR', () => {
+    const plan = createValidBasePlan();
+    plan.type = 'pontual'; // C1 = Verdadeiro
+    plan.authorizedByResponsible = false; // C2 = Falso (ativa o !plan.authorizedByResponsible)
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Plano pontual exige autorização');
+  });
+
+  test('TU-WB-04 (Linha L4 da Tabela): Tipo pontual (C1=V) e Com Autorização (C2=V) -> Deve aceitar', () => {
+    const plan = createValidBasePlan();
+    plan.type = 'pontual'; // C1 = Verdadeiro
+    plan.authorizedByResponsible = true; // C2 = Verdadeiro
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
+
+  // =========================================================================
+  // TESTES DE PARÂMETROS COM OPERADORES COMPOSTOS (||)
+  // =========================================================================
+
+  test('TU-WB-05: Tipo de plano inválido -> Deve entrar no desvio de tipo', () => {
+    const plan = createValidBasePlan();
+    plan.type = 'invalido';
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Tipo de plano inválido');
+  });
+
+  // --- TEMPERATURA ---
+  test('TU-WB-06 (Linha L5): Temperatura abaixo do limite (< 18) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.temperature = 17; // C3 = V, C4 = F
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Temperatura fora do intervalo permitido');
+  });
+
+  test('TU-WB-07 (Linha L6): Temperatura acima do limite (> 28) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.temperature = 29; // C3 = F, C4 = V
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Temperatura fora do intervalo permitido');
+  });
+
+  // --- HUMIDADE ---
+  test('TU-WB-08: Humidade abaixo do limite (< 40) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.humidity = 39;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Humidade fora do intervalo permitido');
+  });
+
+  test('TU-WB-09: Humidade acima do limite (> 80) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.humidity = 81;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Humidade fora do intervalo permitido');
+  });
+
+  // --- LUMINOSIDADE ---
+  test('TU-WB-10: Luminosidade abaixo do limite (< 5000) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.luminosity = 4999;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Luminosidade fora do intervalo permitido');
+  });
+
+  test('TU-WB-11: Luminosidade acima do limite (> 25000) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.luminosity = 25001;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Luminosidade fora do intervalo permitido');
+  });
+
+  // --- DURAÇÃO ---
+  test('TU-WB-12: Duração abaixo do limite (< 1) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.duration = 0;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Duração fora do intervalo permitido');
+  });
+
+  test('TU-WB-13: Duração acima do limite (> 365) -> Deve falhar', () => {
+    const plan = createValidBasePlan();
+    plan.duration = 366;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Duração fora do intervalo permitido');
+  });
+
+  // =========================================================================
+  // COBERTURA DE CAMINHOS COMBINADOS E ACUMULAÇÃO DE ERROS
+  // =========================================================================
+  test('TU-WB-14: Múltiplos caminhos simultâneos -> Deve acumular todos os erros possíveis', () => {
+    const catastrophicPlan = {
+      type: 'invalido',
+      temperature: 5,
+      humidity: 95,
+      luminosity: 100,
+      duration: 400,
+      authorizedByResponsible: false
+    };
+
+    const result = validatePlan(catastrophicPlan);
+    expect(result.valid).toBe(false);
+    expect(result.errors.length).toBe(5); // Valida que passou por todas as decisões sequenciais
+  });
+});
