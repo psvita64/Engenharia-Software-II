@@ -481,10 +481,6 @@ describe('Sprint 5 - Testes White-box: Validação de Plano Pontual', () => {
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
   });
-});
-const { validatePlan } = require('./planService'); // Ajusta o caminho se necessário
-
-describe('Sprint 5 - Suite de Testes White-Box Absoluta (validatePlan)', () => {
 
   // Fábrica de planos válidos para isolamento de variáveis
   const createValidBasePlan = () => ({
@@ -573,6 +569,14 @@ describe('Sprint 5 - Suite de Testes White-Box Absoluta (validatePlan)', () => {
     expect(result.errors).toContain('Temperatura fora do intervalo permitido');
   });
 
+  test('TU-WB-15 : Temperatura Correta', () => {
+    const plan = createValidBasePlan();
+    plan.temperature = 20; // C3 = F, C4 = F
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Temperatura Correta');
+  });
   // --- HUMIDADE ---
   test('TU-WB-08: Humidade abaixo do limite (< 40) -> Deve falhar', () => {
     const plan = createValidBasePlan();
@@ -591,6 +595,15 @@ describe('Sprint 5 - Suite de Testes White-Box Absoluta (validatePlan)', () => {
     expect(result.valid).toBe(false);
     expect(result.errors).toContain('Humidade fora do intervalo permitido');
   });
+   test('TU-WB-016: Humidade Correta', () => {
+    const plan = createValidBasePlan();
+    plan.humidity = 50;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Humidade dentro do intervalo permitido');
+  });
+
 
   // --- LUMINOSIDADE ---
   test('TU-WB-10: Luminosidade abaixo do limite (< 5000) -> Deve falhar', () => {
@@ -611,6 +624,14 @@ describe('Sprint 5 - Suite de Testes White-Box Absoluta (validatePlan)', () => {
     expect(result.errors).toContain('Luminosidade fora do intervalo permitido');
   });
 
+   test('TU-WB-17: Luminosidade Correta', () => {
+    const plan = createValidBasePlan();
+    plan.luminosity = 24001;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Luminosidade Correto do intervalo permitido');
+  });
   // --- DURAÇÃO ---
   test('TU-WB-12: Duração abaixo do limite (< 1) -> Deve falhar', () => {
     const plan = createValidBasePlan();
@@ -628,6 +649,16 @@ describe('Sprint 5 - Suite de Testes White-Box Absoluta (validatePlan)', () => {
     const result = validatePlan(plan);
     expect(result.valid).toBe(false);
     expect(result.errors).toContain('Duração fora do intervalo permitido');
+  });
+
+  
+  test('TU-WB-18: Duração Correta', () => {
+    const plan = createValidBasePlan();
+    plan.duration = 300;
+    
+    const result = validatePlan(plan);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain('Duração dentro do intervalo permitido');
   });
 
   // =========================================================================
