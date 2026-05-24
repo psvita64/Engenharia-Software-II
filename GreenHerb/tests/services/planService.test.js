@@ -574,8 +574,8 @@ describe('Sprint 5 - Testes White-box: Validação de Plano Pontual', () => {
     plan.temperature = 20; // C3 = F, C4 = F
     
     const result = validatePlan(plan);
-    expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Temperatura Correta');
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
   });
   // --- HUMIDADE ---
   test('TU-WB-08: Humidade abaixo do limite (< 40) -> Deve falhar', () => {
@@ -600,8 +600,8 @@ describe('Sprint 5 - Testes White-box: Validação de Plano Pontual', () => {
     plan.humidity = 50;
     
     const result = validatePlan(plan);
-    expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Humidade dentro do intervalo permitido');
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
   });
 
 
@@ -629,8 +629,8 @@ describe('Sprint 5 - Testes White-box: Validação de Plano Pontual', () => {
     plan.luminosity = 24001;
     
     const result = validatePlan(plan);
-    expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Luminosidade Correto do intervalo permitido');
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
   });
   // --- DURAÇÃO ---
   test('TU-WB-12: Duração abaixo do limite (< 1) -> Deve falhar', () => {
@@ -657,8 +657,8 @@ describe('Sprint 5 - Testes White-box: Validação de Plano Pontual', () => {
     plan.duration = 300;
     
     const result = validatePlan(plan);
-    expect(result.valid).toBe(false);
-    expect(result.errors).toContain('Duração dentro do intervalo permitido');
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
   });
 
   // =========================================================================
