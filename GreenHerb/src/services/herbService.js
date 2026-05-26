@@ -53,4 +53,4 @@ const processHerbImport = (filePath) => {
 
 };
 
-module.exports = { validateHerb };
+module.exports = { validateHerb, processHerbImport };

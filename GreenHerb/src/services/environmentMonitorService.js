@@ -6,25 +6,49 @@ const {
   sendNotification
 } = require('./gateways/notificationGateway');
 
+const {
+  classifyAlert
+} = require('./alertService');
+
 const processEnvironmentMeasurement = () => {
 
   const measurement =
     getMeasurementFromSensor();
 
-  if (measurement.value > 28) {
+  const limits = {
+    minT: 18,
+    maxT: 28,
+    minH: 40,
+    maxH: 80
+  };
+
+  const result =
+    classifyAlert(
+      measurement.value,
+      50, 
+      limits,
+      true
+    );
+
+  if (
+    result.severity === 'Aviso' ||
+    result.severity === 'Crítico'
+  ) {
 
     sendNotification(
-      'Temperatura acima do limite'
+      `Alerta ${result.severity}: Temperatura fora dos limites`
     );
 
     return {
-      alert: true
+      alert: true,
+      severity: result.severity
     };
 
   }
 
   return {
-    alert: false
+    alert: false,
+    severity: result.severity
   };
 
 };
