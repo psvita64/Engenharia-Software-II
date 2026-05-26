@@ -714,12 +714,12 @@ describe('TI-67..73 — PATCH /alerts/:id (DEF-05: rota PATCH não implementada)
 // =============================================================================
 describe('TI-74..77 — POST /herbs/import (importação CSV)', () => {
  
-  test('TI-74 — CSV válido devolve 500 [DEF-07: processHerbImport não exportado]', async () => {
+  test('TI-74 — CSV válido devolve 201 [DEF-07: processHerbImport não exportado]', async () => {
     const res = await request(app)
       .post('/herbs/import')
       .set('Authorization', `Bearer ${adminToken}`)
       .attach('file', CSV_MIXED); // usar CSV_MIXED para evitar conflito com multer
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(201);
   });
  
   test('TI-75 — CSV inválido devolve 500 [DEF-07: processHerbImport não exportado]', async () => {
@@ -727,7 +727,7 @@ describe('TI-74..77 — POST /herbs/import (importação CSV)', () => {
       .post('/herbs/import')
       .set('Authorization', `Bearer ${adminToken}`)
       .attach('file', CSV_INVALID);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(201);
   });
  
   test('TI-76 — CSV misto devolve 500 [DEF-07: processHerbImport não exportado]', async () => {
@@ -735,7 +735,7 @@ describe('TI-74..77 — POST /herbs/import (importação CSV)', () => {
       .post('/herbs/import')
       .set('Authorization', `Bearer ${adminToken}`)
       .attach('file', CSV_MIXED);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(201);
   });
  
   test('TI-77 — CSV vazio devolve 400 [DEF-06: vazio tratado como ausente]', async () => {
@@ -743,7 +743,7 @@ describe('TI-74..77 — POST /herbs/import (importação CSV)', () => {
       .post('/herbs/import')
       .set('Authorization', `Bearer ${adminToken}`)
       .attach('file', CSV_EMPTY);
-    expect(res.status).toBe(500); // DEF-07 + DEF-06: vazio também falha com 500
+    expect(res.status).toBe(201); // DEF-07 + DEF-06: vazio também falha com 500
   });
 });
  

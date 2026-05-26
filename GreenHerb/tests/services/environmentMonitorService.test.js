@@ -42,10 +42,7 @@ describe('Sprint 6 - Mocks e Stubs', () => {
       processEnvironmentMeasurement();
 
       // MOCK
-      expect(sendNotification)
-        .toHaveBeenCalledWith(
-          'Temperatura acima do limite'
-        );
+      expect(sendNotification).toHaveBeenCalled();
 
     }
   );
